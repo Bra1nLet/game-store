@@ -1,18 +1,37 @@
-
+from pymongo import MongoClient
+# Sample of collection "game"
+'''
 game = {
-    "id": "",
+    "game_url": "",
     "name": "",
-    "platforms": ["ps5", "ps4"],
+    "image_url": "",    
     "rating": "4.3",
-    "image_url": "",
-    "age_rating": "13+",
-    "editions": {
-        'standard': {"price": {"try": 200, "uah": 248}},
-        'deluxe': {"price": {"try": 240, "uah": 288}},
-        'ultra': {"price": {"try": 280, "uah": 320}}
+    "age_limit": "13+",
+    "editions": [
+        {"edition_name": "", "edition_picture":"./", edition_platforms: "", edition_details: [], "price": ""},
+        {"edition_name": "", "edition_picture":"./", edition_platforms: "", edition_details: [], "price": ""},
+        {"edition_name": "", "edition_picture":"./", edition_platforms: "", edition_details: [], "price": ""},
+    ],
+    "details": {
+        "publisher": "",
+        "release": "4.10.2017",    
     },
-    "release_date": "4.10.2017",
-    "publisher": "Sony Interactive Entertainment Europe",
     "genres": ["Боевики", "Приключения"],
     "trailer_url": [None | str],
 }
+'''
+db = MongoClient('mongodb://root:example@localhost:27017/')
+
+
+class GamesCollection:
+    def __init__(self):
+        self.collection = db['games'].get_collection('games')
+
+    def find_by_name(self, game_name):
+        return self.collection.find_one({'name': game_name})
+
+    def update_game(self, game, data):
+        self.collection.update_one(game, {'$set': data})
+
+
+games_collection = GamesCollection()

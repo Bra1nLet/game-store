@@ -12,7 +12,6 @@ class MainPageSelector:
 
         self.game_image_url = 'img.psw-fade-in.psw-top-left.psw-l-fit-cover'
         self.game_name = 'span.psw-t-body.psw-c-t-1.psw-t-truncate-2.psw-m-b-2'
-        self.game_price = '.psw-m-r-3'
 
         self.data = {
             main_page_tags.ps5_btn: self.ps5_btn,
@@ -23,7 +22,6 @@ class MainPageSelector:
             main_page_tags.page_number: self.page_number,
             main_page_tags.game_image_url: self.game_image_url,
             main_page_tags.game_name: self.game_name,
-            main_page_tags.game_price: self.game_price
         }
 
     def get_selector_by_tag(self, tag):

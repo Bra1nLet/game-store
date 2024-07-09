@@ -7,7 +7,6 @@ class Tags:
         self.next_page = 'next_page'
         self.page_number = 'page_number'
         self.game_image_url = 'game_image_url'
-        self.game_price = 'game_price'
         self.game_name = 'game_name'
 
 
