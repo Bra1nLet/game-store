@@ -1,37 +1,26 @@
+from typing import List
+from pydantic import BaseModel
 from pymongo import MongoClient
-# Sample of collection "game"
-'''
-game = {
-    "game_url": "",
-    "name": "",
-    "image_url": "",    
-    "rating": "4.3",
-    "age_limit": "13+",
-    "editions": [
-        {"edition_name": "", "edition_picture":"./", edition_platforms: "", edition_details: [], "price": ""},
-        {"edition_name": "", "edition_picture":"./", edition_platforms: "", edition_details: [], "price": ""},
-        {"edition_name": "", "edition_picture":"./", edition_platforms: "", edition_details: [], "price": ""},
-    ],
-    "details": {
-        "publisher": "",
-        "release": "4.10.2017",    
-    },
-    "genres": ["Боевики", "Приключения"],
-    "trailer_url": [None | str],
-}
-'''
+from src.db.models.game_model import GameModel
+
 db = MongoClient('mongodb://root:example@localhost:27017/')
+game_collection = db['games'].get_collection("games")
 
 
-class GamesCollection:
-    def __init__(self):
-        self.collection = db['games'].get_collection('games')
+class GameCollection(BaseModel):
+    """
+    A container holding a list of `GameModel` instances.
 
-    def find_by_name(self, game_name):
-        return self.collection.find_one({'name': game_name})
-
-    def update_game(self, game, data):
-        self.collection.update_one(game, {'$set': data})
+    This exists because providing a top-level array in a JSON response can be a [vulnerability]
+    """
+    games: List[GameModel]
 
 
-games_collection = GamesCollection()
+def insert_game(game: GameModel):
+    """
+    Insert a game record to db.
+    :return:
+    """
+    game_collection.insert_one(
+        game.model_dump(by_alias=True)
+    )

@@ -10,6 +10,8 @@ class MainPageSelector:
         self.page_number = 'button.psw-button.psw-b-0.psw-page-button.psw-p-x-3.psw-r-pill.psw-l-line-center.psw-l-inline.psw-t-size-3.psw-t-align-c'
         self.next_page = 'span.psw-icon.psw-icon--chevron-right.psw-icon.psw-icon-size-2.psw-icon--chevron-right'
 
+        self.price = 'span.psw-m-r-3'
+
         self.game_image_url = 'img.psw-fade-in.psw-top-left.psw-l-fit-cover'
         self.game_name = 'span.psw-t-body.psw-c-t-1.psw-t-truncate-2.psw-m-b-2'
 
@@ -22,6 +24,7 @@ class MainPageSelector:
             main_page_tags.page_number: self.page_number,
             main_page_tags.game_image_url: self.game_image_url,
             main_page_tags.game_name: self.game_name,
+            main_page_tags.price: self.price,
         }
 
     def get_selector_by_tag(self, tag):

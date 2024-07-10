@@ -1,3 +1,6 @@
-from src.db.games import games_collection, db
+from games import game_collection
+# db.drop_database('games')
+games = game_collection.find({})
 
-db.drop_database('games')
+for game in games:
+    print(game)

@@ -1,9 +1,10 @@
-# main.py
-from flask import Flask, jsonify
-from blueprints.basic_enpoints import blueprint as basic_enpoints
+from src.api.handlers.games.game_handlers import game_api
+from flask_openapi3 import OpenAPI
 
-app = Flask(__name__)
-app.register_blueprint(basic_enpoints)
 
-if __name__ == '__main__':
-    app.run()
+app = OpenAPI(__name__)
+app.register_api(game_api)
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

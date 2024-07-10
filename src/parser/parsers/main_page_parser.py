@@ -4,7 +4,7 @@ from pyppeteer.page import Page
 from src.parser.selectors.main_page.selector import main_page_selector
 from src.parser.selectors.main_page.tags import main_page_tags
 from src.parser.game.game_element import GameElement
-from src.db.games import games_collection
+from src.db.games import game_collection
 
 
 class MainPageParser:
@@ -35,16 +35,16 @@ class MainPageParser:
         while page_number <= total_pages:
             elements = await self.page.querySelectorAll(all_games_selector)
             for element in elements:
-                collection_length = len(list(games_collection.collection.find({})))
+                collection_length = len(list(game_collection.find({})))
                 print(collection_length)
                 if collection_length == 100:
                     print("finish", collection_length)
-                    for i in list(games_collection.collection.find({})):
+                    for i in list(game_collection.find({})):
                         print(i)
                     return
                 game_element = GameElement(element)
                 data = await game_element.get_game_data()
-                games_collection.collection.insert_one(data)
+                game_collection.insert_one(data.model_dump(by_alias=True))
             page_number += 1
             await self.page.goto(current_url + f"/{page_number}")
             await asyncio.sleep(5)

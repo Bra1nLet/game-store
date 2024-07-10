@@ -2,7 +2,7 @@ import asyncio
 from pyppeteer import launch
 from pyppeteer.page import Page
 from src.parser.parsers.main_page_parser import MainPageParser
-from src.db.games import games_collection
+from src.db.games import game_collection
 from src.parser.parsers.detail_parse_game import DetailGameParser
 
 
@@ -17,7 +17,7 @@ async def main():
 
 
 async def collect_detail_information(page: Page):
-    games = list(games_collection.collection.find({}))
+    games = list(game_collection.find({}))
     for game in games:
         await page.goto(game['game_url'])
         print(game['name'], type(game['name']))

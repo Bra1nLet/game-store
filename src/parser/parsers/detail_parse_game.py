@@ -1,14 +1,16 @@
 import asyncio
-
+from typing import List
 from pyppeteer.page import Page
-from src.db.games import games_collection
+from src.db.games import game_collection
+from src.db.models.game_model import EditionModel
+
 from src.parser.selectors.game_page.selector import game_page_selectors
 from src.parser.edition.edition import Edition
 
 
 class DetailGameParser:
     def __init__(self, page: Page, game_name: str):
-        self.game = games_collection.find_by_name(game_name)
+        self.game = game_collection.find_one({"name": game_name})
         self.game_name = game_name
         self.page = page
 
@@ -31,16 +33,16 @@ class DetailGameParser:
         print(data)
         print("----------------")
         if data != {}:
-            games_collection.update_game(self.game, data)
+            game_collection.update_one(self.game, {"$set": data})
 
-    async def get_editions(self) -> list:
+    async def get_editions(self) -> List:
         await asyncio.sleep(5)
         editions_elements = await self.page.querySelectorAll(game_page_selectors.editions)
         editions = []
         if editions_elements:
             for i in range(len(editions_elements)):
                 edition = Edition(editions_elements[i], self.game_name, i)
-                editions.append(await edition.get_edition())
+                editions.append((await edition.get_edition()).model_dump())
         return editions
 
     async def get_details(self) -> dict:

@@ -8,6 +8,7 @@ class Tags:
         self.page_number = 'page_number'
         self.game_image_url = 'game_image_url'
         self.game_name = 'game_name'
+        self.price = 'game_price'
 
 
 main_page_tags = Tags()
