@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/styles.css">
+    <title>Title</title>
+    <script>
+        var WebApp = window.Telegram.WebApp;
+        const result = fetch("https://d600-57-129-12-240.ngrok-free.app/games", {
+            method: "GET",
+            headers: {
+                "DataCheckString": WebApp.initData,
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);  // Log the data to the console
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    </script>
+    <style>
+        #white {
+            color: white;
+            background: aqua;
+        }
+
+        .white {
+            color: white;
+            background: aqua;
+        }
+
+        body {
+            background: blueviolet;
+        }
+    </style>
+</head>
+<body>
+<h1 id="white" class="white">site</h1>
+<h1 class="white">site</h1>
+<h1 class="white">site</h1>
+</body>
+</html>

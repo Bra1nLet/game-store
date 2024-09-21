@@ -1,0 +1,12 @@
+### GET request to example server
+GET localhost:5000/games?page=2&country=UA
+
+###
+GET localhost:5000/games?page=2&country=TR
+
+###
+GET localhost:5000/game/669537cc55f00ec7ecca903b
+
+
+###
+GET localhost:5000/game/?name=game

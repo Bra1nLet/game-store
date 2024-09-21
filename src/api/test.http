@@ -1,0 +1,86 @@
+### GET request to example server
+GET http://localhost:5000/users
+    ?generated-in=PyCharm
+
+
+### GET Games
+POST https://c76f-46-172-192-235.ngrok-free.app/games
+Content-Type: application/json
+
+{
+  "page": 0,
+  "genres": ["Спорт", "Ролевые игры"]
+}
+### POST recuest to create user
+POST http://localhost:5000/user
+Content-Type: application/json
+
+{
+  "tg_user_id": 12131311111
+}
+
+### Get user
+GET http://localhost:5000/user/12131311111
+Content-Type: application/json
+
+### Set account country
+PUT http://localhost:5000/user/12131311111
+Content-Type: application/json
+
+{
+  "country": "ukraine"
+}
+
+### Add reserve code or change it
+PUT http://localhost:5000/user/12131311111
+Content-Type: application/json
+
+{
+  "reserve_code": "212001201j2f12ffm2fo2(i don't know how it should looks like)"
+}
+
+
+
+### Add data about platform or change it
+PUT http://localhost:5000/user/12131311111
+Content-Type: application/json
+
+{
+  "platform": "PS5"
+}
+
+
+### Add users subscribe
+POST http://localhost:5000/user/subscribes
+Content-Type: application/json
+
+{
+  "tg_user_id": 12131311111,
+  "name": "ps Ultra",
+  "starts": "01/03/24",
+  "ends": "01/04/24"
+}
+
+
+
+### Get users subscribes
+GET http://localhost:5000/user/subscribes/12131311111
+Content-Type: application/json
+
+
+### Delete user
+DELETE http://localhost:5000/user
+Content-Type: application/json
+
+{
+  "tg_user_id": 12131311111
+}
+
+### Delete users subscribe
+DELETE http://localhost:5000/user/subscribes
+Content-Type: application/json
+
+{
+  "tg_user_id": 12131311111,
+  "subscribe_bid": "66ba8aac8ad92cd396f086c7"
+}
