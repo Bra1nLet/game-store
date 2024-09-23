@@ -1,0 +1,80 @@
+[
+  {
+      "age_limit": "IARC 12+",
+      "currency": "UAH",
+      "details": {
+          "Выпуск:": "30.7.2020",
+          "Голос:": "Английский",
+          "Жанры:": "Ролевые Игры",
+          "Издатель:": "Slitherine",
+          "Платформа:": "PS4",
+          "Языки отображения:": "Английский, Испанский, Немецкий, Французский (Франция)"
+      },
+      "discount": {
+          "discount_percentage": "-70%",
+          "price_without_discount": 2160.1370156283447
+      },
+      "editions": null,
+      "id": "669537d855f00ec7ecca9d8a",
+      "image_url": "https://image.api.playstation.com/vulcan/ap/rnd/202007/2117/lvjyAyef8DSYrphpskZSowf1.png?w=180",
+      "name": "Fantasy General II: Invasion",
+      "price_rub": 648.0411046885034,
+      "rating": "4.39",
+      "trailer": null
+  },
+  {
+      "age_limit": "IARC 7+",
+      "currency": "UAH",
+      "details": {
+          "Выпуск:": "30.7.2020",
+          "Жанры:": "Боевики",
+          "Издатель:": "HANDY GAMES GMBH",
+          "Платформа:": "PS4",
+          "Языки отображения:": "Английский, Датский, Испанский, Итальянский, Китайский (традиционное письмо), Китайский (упрощенное письмо), Корейский, Немецкий, Нидерландский, Норвежский, Польский, Португальский (Бразилия), Русский, Турецкий, Финский, Французский (Франция), Шведский, Японский, болгарский, венгерский, греческий, румынский, словацкий, хорватский, чешский"
+      },
+      "discount": null,
+      "editions": null,
+      "id": "669537d855f00ec7ecca9d8b",
+      "image_url": "https://image.api.playstation.com/vulcan/ap/rnd/202006/1012/T78t007hs16gkFfngx2LltKp.png?w=180",
+      "name": "Spitlings",
+      "price_rub": 1046.8850353243415,
+      "rating": "3.55",
+      "trailer": null
+  },
+  {
+      "age_limit": "IARC 3+",
+      "currency": "UAH",
+      "details": {
+          "Выпуск:": "29.7.2020",
+          "Жанры:": "Боевики, Семейные, Головоломки",
+          "Издатель:": "eastasiasoft",
+          "Платформа:": "PS4",
+          "Языки отображения:": "Английский, Японский"
+      },
+      "discount": null,
+      "editions": [
+          {
+              "details": [],
+              "name": "112th Seed",
+              "picture": "./pictures/112th Seed_112th Seed_0.png",
+              "platforms": "PS5",
+              "price_rub": 340.39820166987795,
+              "price_without_discount": null
+          },
+          {
+              "details": [],
+              "name": "112th Seed",
+              "picture": "./pictures/112th Seed_112th Seed_1.png",
+              "platforms": "PS4",
+              "price_rub": 340.39820166987795,
+              "price_without_discount": null
+          }
+      ],
+      "id": "669537d855f00ec7ecca9d8c",
+      "image_url": "https://image.api.playstation.com/vulcan/ap/rnd/202007/1407/DvrAMZMgk3X4t5Pj4fRPCOQW.png?w=180",
+      "name": "112th Seed",
+      "price_rub": 340.39820166987795,
+      "rating": "4.10",
+      "trailer": null
+  }
+]

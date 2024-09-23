@@ -4,7 +4,7 @@ GET http://localhost:5000/users
 
 
 ### GET Games
-POST https://c76f-46-172-192-235.ngrok-free.app/games
+POST https://070a-46-172-192-235.ngrok-free.app/games
 Content-Type: application/json
 
 {

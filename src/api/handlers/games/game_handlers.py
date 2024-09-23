@@ -4,8 +4,7 @@ from bson import ObjectId
 from pydantic import BaseModel, Field
 from flask_openapi3 import Tag, APIBlueprint
 from flask_openapi3.models import Info
-from src.db.db import game_collection_converted, game_collection_converted_ua, game_collection_converted_tr, \
-    games_collection, games_collection_tr
+from src.db.db import games_collection, games_collection_tr
 from src.api.models.new_game_model import GamesList, Game
 from flask import abort
 
@@ -21,6 +20,7 @@ class RequestPath(BaseModel):
 class RequestQuery(BaseModel):
     name: str = Field(default=None)
     page: int = Field(default=0)
+    platform: Optional[str] = Field(default=None)
     genres: Optional[List[Optional[str]]] = Field(default=None)
     currency: str = Field(default="UAH")
     min_price: int = Field(default=None)
@@ -48,6 +48,8 @@ def get_game_sequence(body: RequestQuery):
     """
     get game page
     """
+    print("REQUEST")
+    print(body)
     search = {}
     collection = games_collection
     if body.currency == "TRY":
@@ -62,6 +64,8 @@ def get_game_sequence(body: RequestQuery):
         search.update({"price_rub": {"$lte": body.max_price}})
     if body.with_discount:
         search.update({"discount_percentage": {"$ne": None}})
+    if body.platform:
+        search.update({"details.Платформа": {"$regex": body.platform, "$options": "i"}})
     if body.genres:
         options = []
         for genre in body.genres:
@@ -70,5 +74,12 @@ def get_game_sequence(body: RequestQuery):
             options[i].update(search)
         search = {"$or": options}
     games = list(collection.find(search).skip(30 * body.page).limit(30))
+    gc = GamesList(games=games)
+    return gc.model_dump(), HTTPStatus.OK
+
+@game_api.get("/games", summary="get game sequence", tags=[game_tag])
+def games():
+    games = list(games_collection.find({}).skip(0).limit(30))
+    print(games)
     gc = GamesList(games=games)
     return gc.model_dump(), HTTPStatus.OK

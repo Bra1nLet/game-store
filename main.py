@@ -6,15 +6,10 @@ from mpi4py import MPI
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
-universe_size=comm.Get_attr(MPI.UNIVERSE_SIZE)
+universe_size=comm.Get_size()
 
 PROXYS = {
-    0: {"server": "socks4://147.78.183.38:1085"},
-    1: {"server": "socks4://217.145.227.217:1085"},
-    2: {"server": "socks4://147.78.183.149:1085"} ,
-    3: {"server": "socks4://217.145.227.191:1085"},
-    4: {"server": "socks4://147.78.183.124:1085"} ,
-    5: {"server": "socks4://147.78.183.230:1085"} ,
+    0: {"server": "socks5://57.129.12.240:64021"},
 }
 
 CHECK_PAGES = {
@@ -23,12 +18,15 @@ CHECK_PAGES = {
 }
 
 def run(pw: Playwright, total_pages):
-    browser = pw.chromium.launch(headless=False, proxy=PROXYS[rank])
+    browser = pw.chromium.launch(headless=True, proxy=PROXYS[rank])
     ctx = browser.new_context()
     page = ctx.new_page()
     for currency in rates:
-        start_page = rank * (total_pages[currency] // 6)
-        end_page = rank * (total_pages[currency] // 6) + 1
+        start_page = rank * (total_pages[currency] // universe_size)
+        if universe_size == rank + 1:
+            end_page = total_pages
+        else:
+            end_page = (rank + 1) * (total_pages[currency] // universe_size)
         if rank == 6:
             end_page = total_pages[currency]
 
@@ -49,7 +47,7 @@ def run(pw: Playwright, total_pages):
 
 
 def get_total_pages(pw: Playwright):
-    browser = pw.chromium.launch(headless=False, proxy=PROXYS[rank])
+    browser = pw.chromium.launch(headless=True, proxy=PROXYS[rank])
     ctx = browser.new_context()
     page = ctx.new_page()
     pages = []
@@ -66,12 +64,12 @@ if rank == 0:
         data = get_total_pages(playwright)
     try_pages = data[1]
     uah_pages = data[0]
-
-    for i in range(1, universe_size):
-        comm.isend(uah_rate, dest=i, tag=10 + i)
-        comm.isend(try_rate, dest=i, tag=20 + i)
-        comm.isend(uah_pages, dest=i, tag=30 + i)
-        comm.isend(try_pages, dest=i, tag=40 + i)
+    if universe_size > 1:
+        for i in range(1, universe_size):
+            comm.isend(uah_rate, dest=i, tag=10 + i)
+            comm.isend(try_rate, dest=i, tag=20 + i)
+            comm.isend(uah_pages, dest=i, tag=30 + i)
+            comm.isend(try_pages, dest=i, tag=40 + i)
 
 else:
     uah_rate, try_rate = comm.recv(source=0, tag=10 + rank), comm.recv(source=0, tag=20 + rank)
@@ -87,7 +85,6 @@ total_pages = {
     "UAH": uah_pages,
     "TRY": try_pages,
 }
-
 
 with sync_playwright() as playwright:
     run(playwright, total_pages)

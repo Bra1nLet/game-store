@@ -8,8 +8,8 @@ from src.api.models.subscribe import SubscribeModel, SubscribeCategoryList
 #     'mongodb+srv://arhipov744:Joy.Fp.10!@serverlessinstance0.rjo7kf1.mongodb.net/?retryWrites=true&w=majority&appName=ServerlessInstance0',
 # )
 
-# subscribes_collection.drop()
-with open("/src/migrations/innitial_data/subscribe-categories", "r") as file:
+subscribes_collection.drop()
+with open("raw_data/subscribe-categories", "r") as file:
     data = file.read()
     for line in data.split("\n"):
         line = line.split("|")

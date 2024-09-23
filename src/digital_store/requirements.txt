@@ -1,0 +1,8 @@
+aiogram~=3.1.1
+sqlalchemy~=2.0.24
+APScheduler~=3.10.4
+requests~=2.31.0
+pillow~=10.2.0
+AaioAPI~=2.5.6
+openpyxl~=3.1.2
+YooMoney~=0.1.0

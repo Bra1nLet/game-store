@@ -83,7 +83,7 @@ class EditionParser:
     def _collect_price_without_discount(self):
         price_without_discount = self._edition.query_selector(game_page_selectors.price_without_discount)
         if price_without_discount:
-            if price_without_discount := validate_price(price_without_discount.inner_text()):
+            if price_without_discount := validate_price(price_without_discount.inner_text(), self._currency):
                 self._price_without_discount = price_without_discount * self._currency_multiplier
 
     def _collect_platforms(self):

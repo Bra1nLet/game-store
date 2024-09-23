@@ -1,9 +1,7 @@
 from pymongo import MongoClient
-from src.api.models.game import GameModel
+from src.config import MONGODB_CONNECTION_STRING
 
-
-
-db = MongoClient('mongodb://root:example@localhost:27017/')
+db = MongoClient(MONGODB_CONNECTION_STRING)
 games_collection = db['games'].get_collection("games_")
 games_collection_tr = db['games'].get_collection("games_tr")
 editions_collection = db['games'].get_collection("editions")

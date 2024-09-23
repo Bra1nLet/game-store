@@ -15,21 +15,39 @@ from urllib.parse import urlparse, parse_qs
 import hashlib
 import hmac
 
+from src.config import BOT_TOKEN
 
-# @user_api.before_request
-# @game_api.before_request
+app = OpenAPI(__name__)
+CORS_ALLOW_ORIGIN="*,*"
+CORS_EXPOSE_HEADERS="*,*"
+CORS_ALLOW_HEADERS="content-type,datacheckstring,DataCheckString,*"
+cors = CORS(app, origins=CORS_ALLOW_ORIGIN.split(","), allow_headers=CORS_ALLOW_HEADERS.split(",") , expose_headers= CORS_EXPOSE_HEADERS.split(","),   supports_credentials = True)
+
+@game_api.before_request
+@game_categories_api.before_request
+@favorite_list_api.before_request
+@purchase_api.before_request
+@user_api.before_request
+@editions_api.before_request
+@subscribe_api.before_request
+@subscribe_categories_api.before_request
+@basket_api.before_request
+@game_main_api.before_request
 def auth_middleware():
     """Middleware function to check authentication before each request."""
+    if request.method == "OPTIONS":
+        return {}, 200
     data_check_string = request.headers.get('DataCheckString')
     if not data_check_string:
         return jsonify({"error": "Some data is missing"}), 401
 
     data_check_string, _hash = string_to_data_check_string(data_check_string)
-    if not verify_telegram_data(data_check_string, _hash):
-        return jsonify({"error": "Invalid or missing token"}), 403
+    if data_check_string and _hash:
+        if not verify_telegram_data(data_check_string, _hash):
+            return jsonify({"error": "Invalid or missing token"}), 403
+    else:
+        return {}, 403
 
-
-app = OpenAPI(__name__)
 app.register_api(game_api)
 app.register_api(game_categories_api)
 app.register_api(favorite_list_api)
@@ -41,8 +59,7 @@ app.register_api(subscribe_categories_api)
 app.register_api(basket_api)
 app.register_api(game_main_api)
 
-CORS(app)
-bot_token = "7242408826:AAEf8hv5gaj_zIaau5VuwfG8CX_asgjfSyI"
+
 
 
 def hmac_sha256(key, message):
@@ -61,6 +78,7 @@ def string_to_data_check_string(init_data):
 
     keys = query_params.keys()
     sorted_keys = sorted(keys)
+
     _hash = query_params["hash"][0]
     sorted_keys.remove("hash")
     data = []
@@ -68,9 +86,8 @@ def string_to_data_check_string(init_data):
         data.append(i + "=" + query_params[i][0])
     return "\n".join(data), _hash
 
-
 def verify_telegram_data(data_check_string, _hash):
-    secret_key = hmac.new(b"WebAppData", bot_token.encode(), hashlib.sha256).digest()
+    secret_key = hmac.new(b"WebAppData", BOT_TOKEN.encode(), hashlib.sha256).digest()
     calculated_hash = hmac.new(secret_key, data_check_string.encode(), hashlib.sha256).hexdigest()
     if calculated_hash == _hash:
         return True
@@ -79,7 +96,7 @@ def verify_telegram_data(data_check_string, _hash):
 
 
 def check_hash(data_check_string: str, _hash: str):
-    secret_key = hmac_sha256(bot_token, "WebAppData")
+    secret_key = hmac_sha256(BOT_TOKEN, "WebAppData")
     if hmac_sha256(data_check_string, secret_key) == _hash:
         return True
     return False
