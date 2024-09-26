@@ -80,6 +80,5 @@ def get_game_sequence(body: RequestQuery):
 @game_api.get("/games", summary="get game sequence", tags=[game_tag])
 def games():
     games = list(games_collection.find({}).skip(0).limit(30))
-    print(games)
     gc = GamesList(games=games)
     return gc.model_dump(), HTTPStatus.OK

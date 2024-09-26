@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from bson import ObjectId
 from flask_openapi3 import Tag, APIBlueprint
 from flask_openapi3.models import Info
 from pydantic import BaseModel, Field
@@ -18,7 +17,7 @@ class RequestTgPath(BaseModel):
 
 class RequestWishlist(BaseModel):
     tg_user_id: int = Field(...)
-    favorite_game_bid: str = Field(...)
+    game_bid: str = Field(...)
 
 
 @favorite_list_api.get(
@@ -27,8 +26,7 @@ class RequestWishlist(BaseModel):
     tags=[favorite_list_tag]
 )
 def get_users_wishlist(path: RequestTgPath):
-    users_favorite_games = users_favorite_list.find(
-        {"tg_user_id": path.tg_user_id})
+    users_favorite_games = users_favorite_list.find({"tg_user_id": path.tg_user_id})
     if users_favorite_games:
         return UsersFavoriteList(games=list(users_favorite_games)).model_dump(), HTTPStatus.OK
     return {"message": "User not found"}, HTTPStatus.NOT_FOUND
@@ -39,12 +37,15 @@ def get_users_wishlist(path: RequestTgPath):
     summary="add game to wishlist",
     tags=[favorite_list_tag]
 )
-def add_game_to_wishlist(body: UsersFavoriteGame):
-    user_subscribe = users_favorite_list.insert_one(body.model_dump())
-    new_game = users_favorite_list.find_one({"_id": user_subscribe.inserted_id})
-    if new_game:
-        return UsersFavoriteGame.model_validate(new_game).model_dump(), HTTPStatus.OK
-    # return {"message": "Game already added"}, HTTPStatus.NOT_FOUND
+def add_game_to_wishlist(body: RequestWishlist):
+    exist = users_favorite_list.find_one({"tg_user_id": body.tg_user_id, "game_bid": body.game_bid})
+    if exist:
+        return {"message": "Game already added"}, HTTPStatus.CONFLICT
+    else:
+        user_subscribe = users_favorite_list.insert_one(body.model_dump())
+        new_game = users_favorite_list.find_one({"_id": user_subscribe.inserted_id})
+        if new_game:
+            return UsersFavoriteGame.model_validate(new_game).model_dump(), HTTPStatus.OK
 
 
 @favorite_list_api.delete(
@@ -53,8 +54,7 @@ def add_game_to_wishlist(body: UsersFavoriteGame):
     tags=[favorite_list_tag]
 )
 def remove_game_from_wishlist(body: RequestWishlist):
-    wishlist = users_favorite_list.delete_one({"_id": ObjectId(body.favorite_game_bid),
-                                                        "tg_user_id": body.tg_user_id})
-    if wishlist.deleted_count:
+    deleted_game = users_favorite_list.delete_one({"game_bid": body.game_bid, "tg_user_id": body.tg_user_id})
+    if deleted_game.deleted_count:
         return {"message": "Game deleted from wishlist"}, HTTPStatus.OK
     return {"message": "Not found game to delete"}, HTTPStatus.NOT_FOUND

@@ -9,19 +9,21 @@ from src.api.handlers.subscribes.subscribes import subscribe_api
 from src.api.handlers.user.purchase_handlers import purchase_api
 from src.api.handlers.user.user_handlers import user_api
 from flask_openapi3 import OpenAPI
-from flask import request, jsonify, render_template
+from flask import request, jsonify, render_template, g
 from flask_cors import CORS
 from urllib.parse import urlparse, parse_qs
 import hashlib
 import hmac
-
 from src.config import BOT_TOKEN
+
 
 app = OpenAPI(__name__)
 CORS_ALLOW_ORIGIN="*,*"
 CORS_EXPOSE_HEADERS="*,*"
 CORS_ALLOW_HEADERS="content-type,datacheckstring,DataCheckString,*"
-cors = CORS(app, origins=CORS_ALLOW_ORIGIN.split(","), allow_headers=CORS_ALLOW_HEADERS.split(",") , expose_headers= CORS_EXPOSE_HEADERS.split(","),   supports_credentials = True)
+cors = CORS(app, origins=CORS_ALLOW_ORIGIN.split(","), allow_headers=CORS_ALLOW_HEADERS.split(","),
+            expose_headers= CORS_EXPOSE_HEADERS.split(","),   supports_credentials = True)
+
 
 @game_api.before_request
 @game_categories_api.before_request
@@ -41,10 +43,15 @@ def auth_middleware():
     if not data_check_string:
         return jsonify({"error": "Some data is missing"}), 401
 
-    data_check_string, _hash = string_to_data_check_string(data_check_string)
-    if data_check_string and _hash:
+    data_check_string, _hash, params = string_to_data_check_string(data_check_string)
+    if data_check_string and _hash and params:
         if not verify_telegram_data(data_check_string, _hash):
             return jsonify({"error": "Invalid or missing token"}), 403
+        else:
+            print("=====x===x======")
+            print(params)
+            print("=====x===x=====")
+            g.tg_id = params["id"]
     else:
         return {}, 403
 
@@ -58,7 +65,6 @@ app.register_api(subscribe_api)
 app.register_api(subscribe_categories_api)
 app.register_api(basket_api)
 app.register_api(game_main_api)
-
 
 
 
@@ -84,7 +90,7 @@ def string_to_data_check_string(init_data):
     data = []
     for i in sorted_keys:
         data.append(i + "=" + query_params[i][0])
-    return "\n".join(data), _hash
+    return "\n".join(data), _hash, query_params
 
 def verify_telegram_data(data_check_string, _hash):
     secret_key = hmac.new(b"WebAppData", BOT_TOKEN.encode(), hashlib.sha256).digest()
@@ -100,11 +106,6 @@ def check_hash(data_check_string: str, _hash: str):
     if hmac_sha256(data_check_string, secret_key) == _hash:
         return True
     return False
-
-
-@app.get('/')
-def home():
-    return render_template('index.html')
 
 
 if __name__ == "__main__":
