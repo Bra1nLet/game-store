@@ -34,10 +34,9 @@ class GamePrice(BaseModel):
 class GameModel(BaseModel):
     name: str = Field(...)
     price: Dict[str, float] = Field(...)
-    discount: Optional[Dict] = Field(default=None)
-    game_url: Dict[str, str] = Field(...)
+    discount_price: Optional[Dict] = Field(default=None)
+    discount_available: bool = Field(default=False)
     image_url: str = Field(...)
-    age_limit: Optional[str] = Field(default=None)
     details: Optional[Dict[str, str]] = Field(default=None)
     editions: Optional[List[EditionModel]] = Field(default=None)
     rating: Optional[str] = Field(default=None)

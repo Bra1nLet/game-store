@@ -8,10 +8,11 @@ class Game(BaseModel):
     image_url: str = Field(...)
     name: str = Field(...)
     currency: str = Field(...)
-    price_rub: float = Field(...)
+    price: float = Field(...)
 
-    price_without_discount: Optional[float] = Field(default=None)
-    discount_percentage: Optional[str] = Field(default=None)
+    discount_available: bool = Field(default=False)
+    discount_price: Optional[float] = Field(default=None)
+    discount_percentage: Optional[int] = Field(default=None)
     discount_ends: Optional[str] = Field(default=None)
 
     details: Optional[Dict[str, str]] = Field(default=None)
@@ -55,12 +56,13 @@ class EditionModel(BaseModel):
     game_id: str = Field(...)
     name: str = Field(...)
     currency: str = Field(...)
-    price_rub: float = Field(...)
-    price_without_discount: Optional[float] = Field(default=None)
-    discount_percentage: Optional[str] = Field(default=None)
+    price: float = Field(...)
+    discount_available: bool = Field(default=False)
+    discount_price: Optional[float] = Field(default=None)
+    discount_percentage: Optional[int] = Field(default=None)
     discount_ends: Optional[str] = Field(default=None)
-    editions_elements: List[Optional[str]] = Field(default=[])
-    picture_path: str = Field(default=None)
+    details: List[Optional[str]] = Field(default=[])
+    picture_url: str = Field(default=None)
     platforms: Optional[List[Optional[str]]] = Field(...)
 
 class EditionsList(BaseModel):
